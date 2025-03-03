@@ -1,24 +1,32 @@
 package com.a.demo.model;
 
-
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "health_records") // Explicit table name for clarity
 public class HealthRecord {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    
-    private String healthCondition;
-    private String treatment;
-    private LocalDate date;
-    private String pet; // Storing pet name or ID as a string (No Mapping)
 
-    // Constructors
+    @Column(nullable = false)
+    private String healthCondition;
+
+    @Column(nullable = false)
+    private String treatment;
+
+    @Column(nullable = false)
+    private LocalDate date;
+
+    @Column(nullable = false)
+    private String pet; // Storing pet name for filtering operations
+
+    // Default Constructor
     public HealthRecord() {}
 
+    // Parameterized Constructor
     public HealthRecord(String healthCondition, String treatment, LocalDate date, String pet) {
         this.healthCondition = healthCondition;
         this.treatment = treatment;
@@ -67,4 +75,3 @@ public class HealthRecord {
         this.pet = pet;
     }
 }
-

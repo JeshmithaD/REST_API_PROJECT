@@ -20,49 +20,77 @@ public class ShelterController {
     // Create a new shelter
     @PostMapping
     public ResponseEntity<Shelter> createShelter(@RequestBody Shelter shelter) {
-        return ResponseEntity.status(201).body(shelterService.createShelter(shelter));
+        Shelter created = shelterService.createShelter(shelter);
+        return ResponseEntity.status(201).body(created);
     }
 
-    // Get all shelters
-    @GetMapping
+    // Retrieve all shelters without pagination
+    @GetMapping("/all")
     public ResponseEntity<List<Shelter>> getAllShelters() {
-        return ResponseEntity.ok(shelterService.getAllShelters());
+        List<Shelter> shelters = shelterService.getAllShelters();
+        return ResponseEntity.ok(shelters);
     }
 
-    // Get shelter by ID
-    @GetMapping("/{id}")
-    public ResponseEntity<Shelter> getShelterById(@PathVariable Long id) {
-        Optional<Shelter> shelter = shelterService.getShelterById(id);
-        return shelter.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    // Get shelter by name
-    @GetMapping("/name/{name}")
-    public ResponseEntity<Shelter> getShelterByName(@PathVariable String name) {
-        Optional<Shelter> shelter = shelterService.getShelterByName(name);
-        return shelter.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    // Update shelter details
-    @PutMapping("/{id}")
-    public ResponseEntity<Shelter> updateShelter(@PathVariable Long id, @RequestBody Shelter updatedShelter) {
-        return ResponseEntity.ok(shelterService.updateShelter(id, updatedShelter));
-    }
-
-    // Delete shelter by ID
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteShelter(@PathVariable Long id) {
-        shelterService.deleteShelter(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    // Pagination and sorting
+    // Retrieve shelters with pagination and sorting
     @GetMapping("/paginate")
     public ResponseEntity<Page<Shelter>> getSheltersWithPaginationAndSorting(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "asc") String sortOrder) {
-        return ResponseEntity.ok(shelterService.getSheltersWithPaginationAndSorting(page, size, sortBy, sortOrder));
+        Page<Shelter> paginated = shelterService.getSheltersWithPaginationAndSorting(page, size, sortBy, sortOrder);
+        return ResponseEntity.ok(paginated);
+    }
+
+    // Retrieve a shelter by ID
+    @GetMapping("/{id}")
+    public ResponseEntity<Shelter> getShelterById(@PathVariable Long id) {
+        Optional<Shelter> shelter = shelterService.getShelterById(id);
+        return shelter.map(ResponseEntity::ok)
+                      .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    // Retrieve a shelter by name
+    @GetMapping("/name/{name}")
+    public ResponseEntity<Shelter> getShelterByName(@PathVariable String name) {
+        Optional<Shelter> shelter = shelterService.getShelterByName(name);
+        return shelter.map(ResponseEntity::ok)
+                      .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    // Update shelter by ID (returns updated shelter)
+    @PutMapping("/{id}")
+    public ResponseEntity<Shelter> updateShelterById(@PathVariable Long id, @RequestBody Shelter updatedShelter) {
+        try {
+            Shelter updated = shelterService.updateShelterById(id, updatedShelter);
+            return ResponseEntity.ok(updated);
+        } catch (RuntimeException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Update shelter by name (returns updated shelter)
+    @PutMapping("/name/{name}")
+    public ResponseEntity<Shelter> updateShelterByName(@PathVariable String name, @RequestBody Shelter updatedShelter) {
+        try {
+            Shelter updated = shelterService.updateShelterByName(name, updatedShelter);
+            return ResponseEntity.ok(updated);
+        } catch (RuntimeException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Delete shelter by ID and return a message
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteShelterById(@PathVariable Long id) {
+        String message = shelterService.deleteShelterById(id);
+        return ResponseEntity.ok(message);
+    }
+
+    // Delete shelter by name and return a message
+    @DeleteMapping("/name/{name}")
+    public ResponseEntity<String> deleteShelterByName(@PathVariable String name) {
+        String message = shelterService.deleteShelterByName(name);
+        return ResponseEntity.ok(message);
     }
 }

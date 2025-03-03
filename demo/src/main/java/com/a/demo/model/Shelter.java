@@ -1,6 +1,5 @@
 package com.a.demo.model;
 
-
 import jakarta.persistence.*;
 
 @Entity
@@ -9,66 +8,61 @@ public class Shelter {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id;  // Primary Key
 
+    @Column(nullable = false)
     private String name;
-    private String location;
-    private int capacity;
+
+    @Column(nullable = false)
+    private String address;
+
+    private String phoneNumber;
+
+    @Column(nullable = false)
+    private String email;
 
     // Default Constructor
-    public Shelter() {
-    }
+    public Shelter() {}
 
     // Parameterized Constructor
-    public Shelter(Long id, String name, String location, int capacity) {
-        this.id = id;
+    public Shelter(String name, String address, String phoneNumber, String email) {
         this.name = name;
-        this.location = location;
-        this.capacity = capacity;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
     }
 
     // Getters and Setters
     public Long getId() {
         return id;
     }
-
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(Long id) { 
+        this.id = id; 
     }
-
     public String getName() {
         return name;
     }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String name) { 
+        this.name = name; 
     }
-
-    public String getLocation() {
-        return location;
+    public String getAddress() {
+        return address;
     }
-
-    public void setLocation(String location) {
-        this.location = location;
+    public void setAddress(String address) { 
+        this.address = address; 
     }
-
-    public int getCapacity() {
-        return capacity;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
-
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
+    public void setPhoneNumber(String phoneNumber) { 
+        this.phoneNumber = phoneNumber; 
     }
-
-    // toString() Method
-    @Override
-    public String toString() {
-        return "Shelter{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", location='" + location + '\'' +
-                ", capacity=" + capacity +
-                '}';
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(String email) { 
+        this.email = email; 
     }
 }
+
 

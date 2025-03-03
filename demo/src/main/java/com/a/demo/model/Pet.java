@@ -1,114 +1,120 @@
 package com.a.demo.model;
 
-/*import jakarta.persistence.*;
-//import com.fasterxml.jackson.annotation.JsonIgnore;
-//import com.fasterxml.jackson.annotation.JsonProperty;
-@Entity
-
-public class Message {
-    //@JsonIgnore
-    @Id
-    private int id;
-    //@JsonProperty("fname")
-    private String firstname;
-    public int getId()
-    {
-        return id;
-    }
-    public void setId(int id)
-    {
-        this.id = id;
-    }
-    public String getFirstname(){
-        return firstname;
-    }
-    public void setFirstname(String firstname)
-    {
-        this.firstname = firstname;
-    }
-    public String getLastname()
-    {
-        return lastname;
-    }
-    public void setLastname(String lastname)
-    {
-        this.lastname =lastname;
-    }
-    private String lastname;
-    public Message(int id,String firstname,String lastname)
-    {
-        this.id = id;
-        this.firstname=firstname;
-        this.lastname=lastname;
-    }
-    public Message()
-    {
-        
-    }
-
-}*/
-
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
+@Table(name = "pets")
 public class Pet {
+
     @Id
-    private int petId;
-    private String petName;
-    private String petType;
-    private int petAge;
-    private String ownerName;
-    private String ownerAddress;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;  // Primary Key
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private String species;  // e.g., Dog, Cat, Rabbit
+
+    private String breed;
+    
+    private int age;
+    
+    private String healthStatus;
+    
+    private String temperament;
+    
+    private String adoptionStatus;  // e.g., Available, Adopted, Reserved
+
+    // Reviews stored as plain text or JSON string (for simplicity)
+    private String reviews;
+
+    // Default Constructor
+    public Pet() {}
+
+    // Parameterized Constructor
+    public Pet(String name, String species, String breed, int age, String healthStatus, 
+               String temperament, String adoptionStatus, String reviews) {
+        this.name = name;
+        this.species = species;
+        this.breed = breed;
+        this.age = age;
+        this.healthStatus = healthStatus;
+        this.temperament = temperament;
+        this.adoptionStatus = adoptionStatus;
+        this.reviews = reviews;
+    }
 
     // Getters and Setters
-    public int getPetId() {
-        return petId;
+    public Long getId() {
+        return id;
     }
 
-    public void setPetId(int petId) {
-        this.petId = petId;
+    public void setId(Long id) { 
+        this.id = id; 
     }
 
-    public String getPetName() {
-        return petName;
+    public String getName() {
+        return name;
     }
 
-    public void setPetName(String petName) {
-        this.petName = petName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getPetType() {
-        return petType;
+    public String getSpecies() {
+        return species;
     }
 
-    public void setPetType(String petType) {
-        this.petType = petType;
+    public void setSpecies(String species) {
+        this.species = species;
     }
 
-    public int getPetAge() {
-        return petAge;
+    public String getBreed() {
+        return breed;
     }
 
-    public void setPetAge(int petAge) {
-        this.petAge = petAge;
+    public void setBreed(String breed) {
+        this.breed = breed;
     }
 
-    public String getOwnerName() {
-        return ownerName;
+    public int getAge() {
+        return age;
     }
 
-    public void setOwnerName(String ownerName) {
-        this.ownerName = ownerName;
+    public void setAge(int age) { 
+        this.age = age; 
     }
 
-    public String getOwnerAddress() {
-        return ownerAddress;
+    public String getHealthStatus() {
+        return healthStatus;
     }
 
-    public void setOwnerAddress(String ownerAddress) {
-        this.ownerAddress = ownerAddress;
+    public void setHealthStatus(String healthStatus) {
+        this.healthStatus = healthStatus;
+    }
+
+    public String getTemperament() {
+        return temperament;
+    }
+
+    public void setTemperament(String temperament) {
+        this.temperament = temperament;
+    }
+
+    public String getAdoptionStatus() {
+        return adoptionStatus;
+    }
+
+    public void setAdoptionStatus(String adoptionStatus) {
+        this.adoptionStatus = adoptionStatus;
+    }
+
+    public String getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(String reviews) {
+        this.reviews = reviews;
     }
 }
-

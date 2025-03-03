@@ -1,114 +1,105 @@
 package com.a.demo.service;
 
-/*import com.a.demo.model.Message;
-import com.a.demo.repository.MessageRepository;
-
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-@Service
-public class MessageService {
- @Autowired
-    MessageRepository obj;
-    public Message add(Message a)
-    {
-        return obj.save(a);
-    }
-    public List<Message> getAllMessages()
-    {
-        return obj.findAll();
-    }
-    public Optional<Message> getMessageById(int id)
-    {
-        return obj.findById(id);
-
-    }
-    public Message updateMessage(int id, Message newMessage) 
-    {
-        return obj.findById(id).map(existingMessage -> {
-            existingMessage.setId(newMessage.getId()); 
-            existingMessage.setFirstname(newMessage.getFirstname());  
-            return obj.save(existingMessage);
-        }).orElseThrow(() -> new RuntimeException("Message not found with id " + id));
-    }    
-    public void deleteMessage(int id)
-    {
-        if(obj.existsById(id))
-        {
-            obj.deleteById(id);
-        }
-        else
-        {
-            throw new RuntimeException("Message not found with id "+id);
-        }
-    }
-}*/
-
-// Service
-
-
-
-
-
 import com.a.demo.model.Pet;
-import com.a.demo.repository.PetRepo;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-
+import com.a.demo.repository.PetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PetService {
     
     @Autowired
-    private PetRepo petRepository;
+    private PetRepository petRepository;
 
     // Create a new pet
     public Pet createPet(Pet pet) {
         return petRepository.save(pet);
     }
 
-     // Get a pet by ID
-     public Pet getPetById(int id) {
-        return petRepository.findById(id).orElse(null);
+    // Get pet by ID
+    public Optional<Pet> getPetById(Long id) {
+        return petRepository.findById(id);
     }
 
-    // Get all pets sorted by a specific field
+    // Get pet by name
+    public Optional<Pet> getPetByName(String name) {
+        return petRepository.findByName(name);
+    }
+
+    // Get all pets (non-paginated)
+    public List<Pet> getAllPets() {
+        return petRepository.findAll();
+    }
+
+    // Get pets sorted by a specific field
     public List<Pet> sortPets(String field) {
         Sort sort = Sort.by(Sort.Direction.ASC, field);
         return petRepository.findAll(sort);
     }
 
-    // Paginate pets
-    public List<Pet> getPaginatedPets(int page, int size) {
+    // Get paginated pets
+    public Page<Pet> getPaginatedPets(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return petRepository.findAll(pageable).getContent();
+        return petRepository.findAll(pageable);
     }
 
-    // Paginate and sort pets
-    public List<Pet> getPaginatedSortedPets(int page, int size, String field) {
+    // Get paginated and sorted pets
+    public Page<Pet> getPaginatedSortedPets(int page, int size, String field) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, field));
-        return petRepository.findAll(pageable).getContent();
+        return petRepository.findAll(pageable);
     }
 
-    // Delete a pet
-    public boolean deletePet(int id) {
-        Optional<Pet> pet = petRepository.findById(id);
-        if (pet.isPresent()) {
+    // Update pet details by ID using custom JPQL query
+    @Transactional
+    public int updatePetById(Long id, Pet updatedPet) {
+        return petRepository.updatePetById(
+                updatedPet.getName(), // new name
+                updatedPet.getSpecies(),
+                updatedPet.getBreed(),
+                updatedPet.getAge(),
+                updatedPet.getHealthStatus(),
+                updatedPet.getTemperament(),
+                updatedPet.getAdoptionStatus(),
+                updatedPet.getReviews(),
+                id
+        );
+    }
+
+    // Update pet details by name using custom JPQL query
+    @Transactional
+    public int updatePetByName(String name, Pet updatedPet) {
+        return petRepository.updatePetByName(
+                updatedPet.getSpecies(),
+                updatedPet.getBreed(),
+                updatedPet.getAge(),
+                updatedPet.getHealthStatus(),
+                updatedPet.getTemperament(),
+                updatedPet.getAdoptionStatus(),
+                updatedPet.getReviews(),
+                name
+        );
+    }
+
+    // Delete pet by ID
+    public boolean deletePet(Long id) {
+        if (petRepository.existsById(id)) {
             petRepository.deleteById(id);
             return true;
-        } else {
-            return false;
         }
+        return false;
+    }
+
+    // Delete pet by name
+    @Transactional
+    public int deletePetByName(String name) {
+        return petRepository.deleteByName(name);
     }
 }
